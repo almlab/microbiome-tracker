@@ -44,7 +44,7 @@ def annotate_photo():
 # Page for users to see their history
 @app.route('/history/')
 def history():
-    return ''
+    return render_template('history.htm')
 
 
 if __name__ == "__main__":
