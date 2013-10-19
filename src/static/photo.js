@@ -24,5 +24,11 @@ $(function() {
   // Trigger photo take
   document.getElementById("snap").addEventListener("click", function() {
     context.drawImage(video, 0, 0, 640, 480);
+    $.post(
+      "/receive_photo/",
+      {
+        imgData: canvas.toDataURL('image/jpeg')
+      }
+    );
   });
 });
