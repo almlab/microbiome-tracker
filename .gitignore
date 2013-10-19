@@ -36,4 +36,4 @@ nosetests.xml
 .pydevproject
 
 
-src/photos/*.jpg
+[0-9]*.jpg
