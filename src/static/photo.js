@@ -24,7 +24,6 @@ $(function() {
   // Trigger photo take
   document.getElementById("snap").addEventListener("click", function() {
     context.drawImage(video, 0, 0, 640, 480);
-
     var data = new FormData();
     data.append('img', canvas.toDataURL('image/jpg'), 'asdf.jpg');
     var oReq = new XMLHttpRequest();
