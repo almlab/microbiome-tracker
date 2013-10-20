@@ -30,5 +30,7 @@ $(function() {
     var oReq = new XMLHttpRequest();
     oReq.open("POST", "/receive_photo/");
     oReq.send(data);
+    $("#record-feedback").hide();
+    $("#record-feedback").show('slow');
   });
 });
