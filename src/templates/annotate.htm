@@ -11,21 +11,13 @@
   <div class="page-header text-center">
     <h1>Microbiome Tracker</h1>
   </div>
-
-
   <div class="text-center">
     <a href="/">Record</a> -
     <a href="/annotate/">Annotate</a> -
-    <a href="/history/">History</a> -
-	<a href="{{ url_for('logout') }}">log out</a>
+    <a href="/history/">History</a>
   </div>
 
-  <video autoplay></video>
-  <video id="video" width="640" height="480" autoplay></video>
-  <br />
-  <button id="snap">Snap Photo</button>
-  <br />
-  <canvas id="canvas" width="640" height="480" style="display:none"></canvas>
+  <img src="{{ img_src }}" />
 
 </div>
 
