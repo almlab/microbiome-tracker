@@ -61,20 +61,24 @@ def static_files(filename):
 
 
 # Login page
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def login():
-    if request.method == 'POST':
-        db = get_db()
-        username = request.form['username']
-        password = request.form['password']
-        credentials = db.execute('SELECT * FROM person WHERE username=? AND password=?', [username, password]).fetchone()
-        if credentials == None:
-            flash("Invalid Log In")
-        else:
-            session['logged_in'] = True
-            session['username'] = username
-            return redirect(url_for('record'))
     return render_template('login.html')
+
+# Check login
+@app.route('/', methods=['POST'])
+def do_login():
+    db = get_db()
+    username = request.form['username']
+    password = request.form['password']
+    credentials = db.execute('SELECT * FROM person WHERE username=? AND password=?', [username, password]).fetchone()
+    if credentials == None:
+        flash("Invalid Log In")
+        return render_template('login.html')
+    else:
+        session['logged_in'] = True
+        session['username'] = username
+        return redirect(url_for('record'))
 
 ## 
 # Logout Page
