@@ -38,6 +38,7 @@ def login():
             error = 'Invalid password'
         else:
             session['logged_in'] = True
+            session['username'] = request.form['username']
             return redirect(url_for('photo'))
     return render_template('login.html', error=error)
 
