@@ -1,33 +1,9 @@
-<html>
-<head>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<script src="static/photo.js"></script>
-</head>
-<body>
-<div class="container">
-  <div class="page-header text-center">
-    <h1>Microbiome Tracker</h1>
-  </div>
-
-
-  <div class="text-center">
-    <a href="/">Record</a> -
-    <a href="/annotate/">Annotate</a> -
-    <a href="/history/">History</a> -
-	<a href="{{ url_for('logout') }}">log out</a>
-  </div>
-
+{% extends "layout.html" %}
+{% block body %}
   <video autoplay></video>
   <video id="video" width="640" height="480" autoplay></video>
   <br />
   <button id="snap">Snap Photo</button>
   <br />
   <canvas id="canvas" width="640" height="480" style="display:none"></canvas>
-
-</div>
-
-</body>
-</html>
+{% endblock %}

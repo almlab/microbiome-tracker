@@ -1,21 +1,5 @@
-<html>
-<head>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<script src="static/photo.js"></script>
-</head>
-<body>
-<div class="container">
-  <div class="page-header text-center">
-    <h1>Microbiome Tracker</h1>
-  </div>
-  <div class="text-center">
-    <a href="/">Record</a> -
-    <a href="/annotate/">Annotate</a> -
-    <a href="/history/">History</a>
-  </div>
+{% extends "layout.html" %}
+{% block body %}
 
   <div class="text-center">
   <img src="{{ img_src }}" />
@@ -23,8 +7,4 @@
   {{ user }} at {{ timestamp }}
   </div>
 
-
-</div>
-
-</body>
-</html>
+{% endblock %}
