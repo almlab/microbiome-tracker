@@ -1,7 +1,7 @@
-import json
 import os
 import sys
 import base64
+import datetime
 path = os.path.dirname(os.path.realpath(__file__))+'/photos/'
 sys.path.append(path)
 
@@ -72,6 +72,9 @@ def static_files(filename):
 def receive_photo():
     #if 'username' not in session:
     #    return redirect(url_for('login'))
+    # user = session['username']
+
+    # Save photo
     file_location = new_file_name()
     f = open(file_location, 'wb')
     raw_data = request.form['img']
@@ -81,6 +84,8 @@ def receive_photo():
 
     # TODO - Make this save to the database
     file_location
+    #user
+    timestamp = datetime.datetime.now()
 
     return ''
 
@@ -92,14 +97,17 @@ def annotate_photo():
     # TODO - Make this read from the database
     img_id = 1
     img_src = '/static/photos/1.jpg'
+    timestamp = 'October 19, 2013'
 
-    user = session['username']
+    # TODO - Make this read usernames from the session
+    #user = session['username']
+    user = 'Fake User'
 
     kwargs = {}
     kwargs['img_id'] = img_id
     kwargs['img_src'] = img_src
     kwargs['user'] = user
-
+    kwargs['timestamp'] = timestamp
     return render_template('annotate.htm', **kwargs)
 
 @app.route('/annotate/', methods=['POST'])
