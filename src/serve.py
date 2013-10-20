@@ -92,7 +92,22 @@ def logout():
     session.pop('username', None)
     flash('You were logged out')
     return redirect(url_for('login'))
+	
 
+# Page for registration
+@app.route('/register', methods=['GET'])
+def register():
+    return render_template('register.html')
+
+@app.route('/register', methods=['POST'])
+def do_register():
+    db = get_db()
+    username = request.form['username']
+    password = request.form['password']
+	
+    db.execute('INSERT INTO person (username, password) VALUES (?, ?)', (username, password))
+    db.commit()
+    return render_template('login.html')
 
 # Default page that allows user to take pictures and upload them
 @app.route("/record")
