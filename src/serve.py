@@ -194,8 +194,9 @@ def add_wellness():
 def history():
     if 'username' not in session:
         return redirect(url_for('login'))
+    user_id = str(session['user_id'])
     db = get_db()
-    cur = db.execute('SELECT * FROM food ORDER BY id_food')
+    cur = db.execute('SELECT * FROM food WHERE trackperson=? ORDER BY id_food', [user_id])
     entries = cur.fetchall()
     return render_template('history.htm', entries=entries)
 
