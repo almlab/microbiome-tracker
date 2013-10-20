@@ -1,7 +1,5 @@
 import os
-import sys
 import base64
-import datetime
 
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
@@ -75,13 +73,14 @@ def do_login():
     db = get_db()
     username = request.form['username']
     password = request.form['password']
-    credentials = db.execute('SELECT * FROM person WHERE username=? AND password=?', [username, password]).fetchone()
+    credentials = db.execute('SELECT id_person FROM person WHERE username=? AND password=?', [username, password]).fetchone()
     if credentials == None:
         flash("Invalid Log In")
         return render_template('login.html')
     else:
         session['logged_in'] = True
         session['username'] = username
+        session['user_id'] = credentials[0]
         return redirect(url_for('record'))
 
 # Logout Page
@@ -107,7 +106,6 @@ def record():
 def receive_photo():
     if 'username' not in session:
         return redirect(url_for('login'))
-    user = session['username']
 
     # Save photo
     file_location = new_file_name()
@@ -117,13 +115,10 @@ def receive_photo():
     f.write(base64.decodestring(cleaned_data))
     f.close()
 
-    #user
-    timestamp = datetime.datetime.now()
-
+    user_id = session['user_id']
     db = get_db()
-    trackperson = db.execute('SELECT id_person FROM person WHERE username=?', [user]).fetchone()[0]
-    db.execute('INSERT INTO food (file_location, time_stamp, trackperson) VALUES (?, ?, ?)',
-                [file_location, timestamp, trackperson])
+    db.execute('INSERT INTO food (file_location, trackperson, annotation) VALUES (?, ?, ?)',
+                [file_location, user_id, ''])
     db.commit()
     return ''
 
@@ -133,32 +128,25 @@ def annotate():
     if 'username' not in session:
         return redirect(url_for('login'))
     # TODO - Make this read from the database
-
-    img_id = 1
-    img_src = '/static/photos/1.jpg'
-    timestamp = 'October 19, 2013'
-    user = 'Fake User'
-
-    kwargs = {}
-    kwargs['img_id'] = img_id
-    kwargs['img_src'] = img_src
-    kwargs['user'] = user
-    kwargs['timestamp'] = timestamp
-    return render_template('annotate.htm', **kwargs)
+    db = get_db()
+    food = db.execute('SELECT * FROM food WHERE annotation="" ORDER BY id_food DESC LIMIT 1').fetchone()
+    if food == None:
+        return render_template('annotate.htm', no_pictures=True)
+    food = dict(food)
+    food['user'] = session['username']
+    return render_template('annotate.htm', **food)
 
 # Page To Save annotations
 @app.route('/annotate/', methods=['POST'])
 def save_annotation():
     if 'username' not in session:
         return redirect(url_for('login'))
-    img_id = request.form['img_id']
+    print request.form
+    id_food = request.form['id_food']
     annotation = request.form['annotation']
-    annotator = session['username']
-
     db = get_db()
-    trackperson = db.execute('SELECT id_person FROM person WHERE username=?', [annotator]).fetchone()[0]
-    db.execute('UPDATE food SET annotation=? WHERE trackperson=?',
-                 [annotation, trackperson])
+    db.execute('UPDATE food SET annotation=? WHERE id_food=?',
+                 [annotation, id_food])
     db.commit()
 
     return redirect(url_for('annotate'))

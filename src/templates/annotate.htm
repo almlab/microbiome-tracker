@@ -1,10 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
 
-  <div class="text-center">
-  <img src="{{ img_src }}" />
-  <br />
-  {{ user }} at {{ timestamp }}
-  </div>
+  {% if no_pictures %}
+    No pictures found to annotate
+  {% else %}
+    <div class="text-center">
+    <img src="/{{ file_location }}" />
+    <br />
+    {{ time_stamp }}
+    </div>
+    <form action="." method="POST">
+      <textarea name="annotation" cols="80" rows="5">{{ annotation }}</textarea>
+      <input type="hidden" name="id_food" value="{{ id_food }}" />
+      <br />
+      <input type="submit">
+    </form>
+  {% endif %}
 
 {% endblock %}
