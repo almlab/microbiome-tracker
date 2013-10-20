@@ -68,6 +68,7 @@ def login():
     error = None
     if request.method == 'POST':
         # TODO - Match against database username/password
+
         if request.form['username'] != app.config['USERNAME']:
             error = 'Invalid username'
         elif request.form['password'] != app.config['PASSWORD']:
@@ -76,8 +77,10 @@ def login():
             session['logged_in'] = True
             session['username'] = request.form['username']
             return redirect(url_for('record'))
+
     return render_template('login.html', error=error)
 
+## 
 # Logout Page
 @app.route('/logout')
 def logout():
@@ -115,8 +118,9 @@ def receive_photo():
     timestamp = datetime.datetime.now()
 
     db = get_db()
-    db.execute('insert into food (file_location, time_stamp) values (?, ?)',
-                 [file_location, timestamp])
+    trackperson = db.execute('SELECT id_person FROM person WHERE username=?', [user]).fetchone()[0]
+    db.execute('INSERT INTO food (file_location, time_stamp, trackperson) VALUES (?, ?, ?)',
+                [file_location, timestamp, trackperson])
     db.commit()
     return ''
 
@@ -147,7 +151,12 @@ def save_annotation():
     img_id = request.form['img_id']
     annotation = request.form['annotation']
     annotator = session['username']
-    # TODO - Make this save to the database
+
+    db = get_db()
+    trackperson = db.execute('SELECT id_person FROM person WHERE username=?', [annotator]).fetchone()[0]
+    db.execute('UPDATE food SET annotation=? WHERE trackperson=?',
+                 [annotation, trackperson])
+    db.commit()
 
     return redirect(url_for('annotate'))
 
@@ -157,7 +166,7 @@ def history():
     if 'username' not in session:
         return redirect(url_for('login'))
     db = get_db()
-    cur = db.execute('select file_location, time_stamp from food order by id_food')
+    cur = db.execute('SELECT file_location, time_stamp, trackperson, annotation FROM food ORDER BY id_food')
     entries = cur.fetchall()
     return render_template('history.htm', entries=entries)
 

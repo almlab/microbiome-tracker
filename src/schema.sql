@@ -13,7 +13,7 @@ create table food (
   file_location text not null,
   time_stamp text,
   location_stamp text,
-  description text,
+  annotation text,
   trackperson int,
   FOREIGN KEY(trackperson) REFERENCES person(id_person)
 );
@@ -24,3 +24,5 @@ create table wellness (
   trackperson int,
   FOREIGN KEY(trackperson) REFERENCES person(id_person)
 );
+
+insert into person (username, password) values ('admin', 'default');
