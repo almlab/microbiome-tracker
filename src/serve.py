@@ -26,6 +26,12 @@ def new_file_name(i = 0):
     else:
         return location
 
+# Utility page to load static files
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static/', filename)
+
+
 # Login page
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -39,28 +45,24 @@ def login():
         else:
             session['logged_in'] = True
             session['username'] = request.form['username']
-            return redirect(url_for('photo'))
+            return redirect(url_for('record'))
     return render_template('login.html', error=error)
 
 # Logout Page
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
+    session.pop('username', None)
     flash('You were logged out')
     return redirect(url_for('login'))
 
 
 # Default page that allows user to take pictures and upload them
-@app.route("/index")
-def photo():
+@app.route("/record")
+def record():
     #if 'username' not in session:
     #    return redirect(url_for('login'))
-    return render_template('index.htm')
-
-# Utility page to load static files
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory('static/', filename)
+    return render_template('record.htm')
 
 # Page for server to receive photos
 @app.route('/receive_photo/', methods=['POST'])
@@ -86,7 +88,7 @@ def receive_photo():
 
 # Page for users to annotate photos
 @app.route('/annotate/', methods=['GET'])
-def annotate_photo():
+def annotate():
     #if 'username' not in session:
     #    return redirect(url_for('login'))
     # TODO - Make this read from the database
@@ -115,7 +117,7 @@ def save_annotation():
     annotator = session['username']
     # TODO - Make this save to the database
 
-    return redirect(url_for('annotate_photo'))
+    return redirect(url_for('annotate'))
 
 # Page for users to see their history
 @app.route('/history/')

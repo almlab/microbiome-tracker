@@ -14,15 +14,14 @@
     <h1>Microbiome Tracker</h1>
   </div>
 
-
   <div class="text-center">
     {% if session.username %}
       {{ session.username }}
       <br />
     {% endif %}
-    <a href="/">Record</a> -
-    <a href="/annotate/">Annotate</a> -
-    <a href="/history/">History</a> -
+    <a href="{{ url_for('record') }}">Record</a> -
+    <a href="{{ url_for('annotate') }}">Annotate</a> -
+    <a href="{{ url_for('history') }}">History</a> -
     {% if session.logged_in %}
 	  <a href="{{ url_for('logout') }}">Log Out</a>
     {% else %}
