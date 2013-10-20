@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
-    DATABASE='/tmp/flaskr.db',
+    DATABASE='db/database.sqlite',
     DEBUG=True,
     SECRET_KEY='development key',
 ))
@@ -28,7 +28,7 @@ def init_db():
     """Creates the database tables."""
     with app.app_context():
         db = get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
+        with app.open_resource('db/schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
 
@@ -80,7 +80,6 @@ def do_login():
         session['username'] = username
         return redirect(url_for('record'))
 
-## 
 # Logout Page
 @app.route('/logout')
 def logout():

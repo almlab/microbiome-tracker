@@ -37,3 +37,4 @@ nosetests.xml
 
 
 [0-9]*.jpg
+database.sqlite
