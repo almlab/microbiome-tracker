@@ -2,9 +2,6 @@ import os
 import sys
 import base64
 import datetime
-path = os.path.dirname(os.path.realpath(__file__))+'/photos/'
-sys.path.append(path)
-
 
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
@@ -22,11 +19,19 @@ app.config.update(dict(
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
+def new_file_name(i = 0):
+    location = 'static/photos/'+str(i)+'.jpg'
+    if os.path.exists(location):
+        return new_file_name(i + 1)
+    else:
+        return location
 
+# Login page
 @app.route('/', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
+        # TODO - Match against database username/password
         if request.form['username'] != app.config['USERNAME']:
             error = 'Invalid username'
         elif request.form['password'] != app.config['PASSWORD']:
@@ -36,23 +41,12 @@ def login():
             return redirect(url_for('photo'))
     return render_template('login.html', error=error)
 
-
+# Logout Page
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
     return redirect(url_for('login'))
-
-
-
-
-
-def new_file_name(i = 0):
-    location = 'static/photos/'+str(i)+'.jpg'
-    if os.path.exists(location):
-        return new_file_name(i + 1)
-    else:
-        return location
 
 
 # Default page that allows user to take pictures and upload them
@@ -110,6 +104,7 @@ def annotate_photo():
     kwargs['timestamp'] = timestamp
     return render_template('annotate.htm', **kwargs)
 
+# Page To Save annotations
 @app.route('/annotate/', methods=['POST'])
 def save_annotation():
     #if 'username' not in session:
