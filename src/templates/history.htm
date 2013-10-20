@@ -8,7 +8,8 @@
       {{ entry.time_stamp|safe }}
       <img src="/{{ entry.file_location }}" height="100px"/>
       {{ entry.annotation }}
-      <a href="{{ url_for('annotate') }}?id_food={{ entry.id_food }}">Edit</a>
+      <a href="{{ url_for('annotate') }}?id_food={{ entry.id_food }}">Edit</a> -
+      <a href="{{ url_for('delete') }}?id_food={{ entry.id_food }}">Delete</a>
     </li>
   {% else %}
     <li>

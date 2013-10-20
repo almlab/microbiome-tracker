@@ -192,6 +192,18 @@ def history():
     return render_template('history.htm', entries=entries)
 
 
+@app.route("/delete/")
+def delete():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    id_food = request.args.get('id_food')
+    user_id = session['user_id']
+    db = get_db()
+    db.execute('DELETE FROM food WHERE id_food=? AND trackperson=?', [id_food, user_id])
+    db.commit()
+    return redirect(url_for('history'))
+
+
 if __name__ == "__main__":
     init_db()
     app.run(debug=True, host='0.0.0.0', port=9001)
