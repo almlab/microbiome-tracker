@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, session, redirect, url_for
 app = Flask(__name__)
 
 def new_file_name(i = 0):
-    location = 'photos/'+str(i)+'.jpg'
+    location = 'static/photos/'+str(i)+'.jpg'
     if os.path.exists(location):
         return new_file_name(i + 1)
     else:
