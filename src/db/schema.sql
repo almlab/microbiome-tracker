@@ -11,7 +11,7 @@ create table person (
 create table food (
   id_food integer primary key autoincrement,
   file_location text not null,
-  time_stamp text,
+  time_stamp timestamp DEFAULT CURRENT_TIMESTAMP,
   location_stamp text,
   annotation text,
   trackperson int,

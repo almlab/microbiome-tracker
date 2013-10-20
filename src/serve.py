@@ -27,10 +27,14 @@ def connect_db():
 def init_db():
     """Creates the database tables."""
     with app.app_context():
+        new_db = False
+        if not os.path.exists(app.config['DATABASE']):
+            new_db = True
         db = get_db()
-        with app.open_resource('db/schema.sql', mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
+        if new_db:
+            with app.open_resource('db/schema.sql', mode='r') as f:
+                db.cursor().executescript(f.read())
+            db.commit()
 
 def get_db():
     """Opens a new database connection if there is none yet for the
