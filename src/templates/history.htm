@@ -4,9 +4,16 @@
 
   <ul class=entries>
   {% for entry in entries %}
-    <li><h2>{{ entry.file_location }}</h2>{{ entry.time_stamp|safe }} {{ entry.trackperson }} {{ entry.annotation }}
+    <li>
+      {{ entry.time_stamp|safe }}
+      <img src="/{{ entry.file_location }}" height="100px"/>
+      {{ entry.annotation }}
+      <a href="{{ url_for('annotate') }}?id_food={{ entry.id_food }}">Edit</a>
+    </li>
   {% else %}
-    <li><em>Unbelievable.  No entries here so far</em>
+    <li>
+      <em>Unbelievable.  No entries here so far</em>
+    </li>
   {% endfor %}
   </ul>
 {% endblock %}

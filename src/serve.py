@@ -127,9 +127,12 @@ def receive_photo():
 def annotate():
     if 'username' not in session:
         return redirect(url_for('login'))
-    # TODO - Make this read from the database
+    id_food = request.args.get('id_food')
     db = get_db()
-    food = db.execute('SELECT * FROM food WHERE annotation="" ORDER BY id_food DESC LIMIT 1').fetchone()
+    if id_food == None:
+        food = db.execute('SELECT * FROM food WHERE annotation="" AND trackperson=? ORDER BY id_food DESC LIMIT 1', [session['user_id']]).fetchone()
+    else:
+        food = db.execute('SELECT * FROM food WHERE id_food=? AND trackperson=? ORDER BY id_food DESC LIMIT 1', [id_food, session['user_id']]).fetchone()
     if food == None:
         return render_template('annotate.htm', no_pictures=True)
     food = dict(food)
@@ -157,7 +160,7 @@ def history():
     if 'username' not in session:
         return redirect(url_for('login'))
     db = get_db()
-    cur = db.execute('SELECT file_location, time_stamp, trackperson, annotation FROM food ORDER BY id_food')
+    cur = db.execute('SELECT * FROM food ORDER BY id_food')
     entries = cur.fetchall()
     return render_template('history.htm', entries=entries)
 
