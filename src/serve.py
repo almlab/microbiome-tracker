@@ -51,6 +51,8 @@ def login():
 # Logout Page
 @app.route('/logout')
 def logout():
+    if 'username' not in session:
+        return redirect(url_for('login'))
     session.pop('logged_in', None)
     session.pop('username', None)
     flash('You were logged out')
@@ -60,16 +62,16 @@ def logout():
 # Default page that allows user to take pictures and upload them
 @app.route("/record")
 def record():
-    #if 'username' not in session:
-    #    return redirect(url_for('login'))
+    if 'username' not in session:
+        return redirect(url_for('login'))
     return render_template('record.htm')
 
 # Page for server to receive photos
 @app.route('/receive_photo/', methods=['POST'])
 def receive_photo():
-    #if 'username' not in session:
-    #    return redirect(url_for('login'))
-    # user = session['username']
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    user = session['username']
 
     # Save photo
     file_location = new_file_name()
@@ -89,15 +91,12 @@ def receive_photo():
 # Page for users to annotate photos
 @app.route('/annotate/', methods=['GET'])
 def annotate():
-    #if 'username' not in session:
-    #    return redirect(url_for('login'))
+    if 'username' not in session:
+        return redirect(url_for('login'))
     # TODO - Make this read from the database
     img_id = 1
     img_src = '/static/photos/1.jpg'
     timestamp = 'October 19, 2013'
-
-    # TODO - Make this read usernames from the session
-    #user = session['username']
     user = 'Fake User'
 
     kwargs = {}
@@ -110,8 +109,8 @@ def annotate():
 # Page To Save annotations
 @app.route('/annotate/', methods=['POST'])
 def save_annotation():
-    #if 'username' not in session:
-    #    return redirect(url_for('login'))
+    if 'username' not in session:
+        return redirect(url_for('login'))
     img_id = request.form['img_id']
     annotation = request.form['annotation']
     annotator = session['username']
@@ -122,8 +121,8 @@ def save_annotation():
 # Page for users to see their history
 @app.route('/history/')
 def history():
-    #if 'username' not in session:
-    #    return redirect(url_for('login'))
+    if 'username' not in session:
+        return redirect(url_for('login'))
     return render_template('history.htm')
 
 
