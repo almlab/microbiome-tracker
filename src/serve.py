@@ -14,8 +14,6 @@ app.config.update(dict(
     DATABASE='/tmp/flaskr.db',
     DEBUG=True,
     SECRET_KEY='development key',
-    USERNAME='admin',
-    PASSWORD='default'
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
@@ -65,20 +63,18 @@ def static_files(filename):
 # Login page
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    error = None
     if request.method == 'POST':
-        # TODO - Match against database username/password
-
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
+        db = get_db()
+        username = request.form['username']
+        password = request.form['password']
+        credentials = db.execute('SELECT * FROM person WHERE username=? AND password=?', [username, password]).fetchone()
+        if credentials == None:
+            flash("Invalid Log In")
         else:
             session['logged_in'] = True
-            session['username'] = request.form['username']
+            session['username'] = username
             return redirect(url_for('record'))
-
-    return render_template('login.html', error=error)
+    return render_template('login.html')
 
 ## 
 # Logout Page
