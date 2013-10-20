@@ -4,13 +4,13 @@ drop table if exists wellness;
 
 create table person (
   id_person integer primary key autoincrement,
-  username text not null,
+  username text not null unique,
   password text not null
 );
 
 create table food (
   id_food integer primary key autoincrement,
-  file_location text not null,
+  file_location text not null unique,
   time_stamp timestamp DEFAULT CURRENT_TIMESTAMP,
   location_stamp text,
   annotation text,
