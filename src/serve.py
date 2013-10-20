@@ -19,6 +19,36 @@ app.config.update(dict(
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
+## --- database-related stuff ---
+def connect_db():
+    """Connects to the specific database."""
+    rv = sqlite3.connect(app.config['DATABASE'])
+    rv.row_factory = sqlite3.Row
+    return rv
+
+def init_db():
+    """Creates the database tables."""
+    with app.app_context():
+        db = get_db()
+        with app.open_resource('schema.sql', mode='r') as f:
+            db.cursor().executescript(f.read())
+        db.commit()
+
+def get_db():
+    """Opens a new database connection if there is none yet for the
+    current application context.
+    """
+    if not hasattr(g, 'sqlite_db'):
+        g.sqlite_db = connect_db()
+    return g.sqlite_db
+
+@app.teardown_appcontext
+def close_db(error):
+    """Closes the database again at the end of the request."""
+    if hasattr(g, 'sqlite_db'):
+        g.sqlite_db.close()
+## ---
+
 def new_file_name(i = 0):
     location = 'static/photos/'+str(i)+'.jpg'
     if os.path.exists(location):
@@ -81,11 +111,13 @@ def receive_photo():
     f.write(base64.decodestring(cleaned_data))
     f.close()
 
-    # TODO - Make this save to the database
-    file_location
     #user
     timestamp = datetime.datetime.now()
 
+    db = get_db()
+    db.execute('insert into food (file_location, time_stamp) values (?, ?)',
+                 [file_location, timestamp])
+    db.commit()
     return ''
 
 # Page for users to annotate photos
@@ -94,6 +126,7 @@ def annotate():
     if 'username' not in session:
         return redirect(url_for('login'))
     # TODO - Make this read from the database
+
     img_id = 1
     img_src = '/static/photos/1.jpg'
     timestamp = 'October 19, 2013'
@@ -123,8 +156,12 @@ def save_annotation():
 def history():
     if 'username' not in session:
         return redirect(url_for('login'))
-    return render_template('history.htm')
+    db = get_db()
+    cur = db.execute('select file_location, time_stamp from food order by id_food')
+    entries = cur.fetchall()
+    return render_template('history.htm', entries=entries)
 
 
 if __name__ == "__main__":
+    init_db()
     app.run(debug=True, host='0.0.0.0', port=9001)

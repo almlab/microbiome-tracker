@@ -1,4 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
-  History
+  <h1> History </h1>
+
+  <ul class=entries>
+  {% for entry in entries %}
+    <li><h2>{{ entry.file_location }}</h2>{{ entry.time_stamp|safe }}
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+  </ul>
 {% endblock %}
