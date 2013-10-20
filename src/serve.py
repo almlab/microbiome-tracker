@@ -159,15 +159,27 @@ def annotate():
 def save_annotation():
     if 'username' not in session:
         return redirect(url_for('login'))
-    print request.form
     id_food = request.form['id_food']
     annotation = request.form['annotation']
     db = get_db()
     db.execute('UPDATE food SET annotation=? WHERE id_food=?',
                  [annotation, id_food])
     db.commit()
-
     return redirect(url_for('annotate'))
+
+@app.route("/wellness", methods=['GET'])
+def wellness():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('wellness.htm')
+
+@app.route("/wellness", methods=['POST'])
+def add_wellness():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return redirect(url_for('add_wellness'))
+
+
 
 # Page for users to see their history
 @app.route('/history/')

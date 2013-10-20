@@ -1,4 +1,5 @@
 $(function() {
+  if($("#canvas").size() == 0) return;
   // Put event listeners into place
   // Grab elements, create settings, etc.
   var canvas = document.getElementById("canvas");
