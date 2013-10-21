@@ -1,5 +1,8 @@
+import os
 import sys
-sys.path.append('/var/www/microbiome-tracker/src/')
+current_location = os.path.dirname(os.path.realpath(__file__))+'/'
+sys.path.append(current_location)
+sys.path.append(current_location+'../src/')
 
 from serve import app as application
 

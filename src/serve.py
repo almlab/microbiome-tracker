@@ -5,11 +5,12 @@ from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 
+current_location = os.path.dirname(os.path.realpath(__file__))+'/'
 app = Flask(__name__)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
-    DATABASE='db/database.sqlite',
+    DATABASE=current_location + 'db/database.sqlite',
     DEBUG=True,
     SECRET_KEY='development key',
 ))
