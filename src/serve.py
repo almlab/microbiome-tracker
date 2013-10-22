@@ -106,7 +106,7 @@ def do_register():
     username = request.form['username']
     password = request.form['password']
     password2 = request.form['password2']
-    user = db.execute("SELECT * FROM person WHERE username=?", [username])
+    user = db.execute("SELECT * FROM person WHERE username=?", [username]).fetchone()
     if user != None:
         flash("Username is already taken")
         return render_template('register.html')
